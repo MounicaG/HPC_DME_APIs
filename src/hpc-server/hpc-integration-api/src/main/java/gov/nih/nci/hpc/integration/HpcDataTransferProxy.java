@@ -176,6 +176,19 @@ public interface HpcDataTransferProxy {
   }
 
   /**
+   * Get metadata for object file in the archive.
+   *
+   * @param authenticatedToken An authenticated token.
+   * @param fileLocation The file location.
+   * @return metadataEntries
+   * @throws HpcException on data transfer system failure.
+   */
+  public default List<HpcMetadataEntry> getDataObjectMetadata(Object authenticatedToken, HpcFileLocation fileLocation)
+		throws HpcException {
+	throw new HpcException("getDataObjectMetadata is not supported", HpcErrorType.UNEXPECTED_ERROR);
+  }
+
+  /**
    * Delete a data object file.
    *
    * @param authenticatedToken An authenticated token.
@@ -187,7 +200,7 @@ public interface HpcDataTransferProxy {
       HpcArchive baseArchiveDestination) throws HpcException {
     throw new HpcException("deleteDataObject is not supported", HpcErrorType.UNEXPECTED_ERROR);
   }
-
+  
   /**
    * Get a data transfer upload request status.
    *
@@ -337,4 +350,30 @@ public interface HpcDataTransferProxy {
 
     return archiveDestination;
   }
+  
+  /**
+   * Create/Replace Life cycle Policy on a bucket
+   *
+   * @param authenticatedToken An authenticated token.
+   * @param archiveLocation The archive location.
+   * @param prefix The prefix to add 
+   * @throws HpcException on data transfer system failure.
+   */
+  public default void putLifecyclePolicy(Object authenticatedToken,
+      HpcFileLocation archiveLocation, String prefix) throws HpcException {
+    throw new HpcException("putLifecyclePolicy() not supported",
+        HpcErrorType.UNEXPECTED_ERROR);
+  }
+  
+  /**
+   * Restore a data object file.
+   *
+   * @param authenticatedToken An authenticated token.
+   * @param fileLocation The file location.
+   * @throws HpcException on data transfer system failure.
+   */
+  public default void restoreDataObject(Object authenticatedToken, HpcFileLocation fileLocation) throws HpcException {
+    throw new HpcException("restoreDataObject is not supported", HpcErrorType.UNEXPECTED_ERROR);
+  }
+
 }

@@ -206,6 +206,21 @@ public class HpcEventServiceImpl implements HpcEventService {
     addDataTransferEvent(userId, HpcEventType.BULK_DATA_OBJECT_REGISTRATION_FAILED, null, null,
         null, registrationTaskId, completed, null, null, errorMessage, null);
   }
+  
+  @Override
+  public void addArchiveRequestCompletedEvent(String userId, String registrationTaskId,
+      List<HpcBulkDataObjectRegistrationItem> registrationItems, Calendar completed)
+      throws HpcException {
+    addDataTransferEvent(userId, HpcEventType.ARCHIVE_REQUEST_COMPLETED, null, null,
+        null, registrationTaskId, completed, null, null, null, registrationItems);
+  }
+
+  @Override
+  public void addArchiveRequestFailedEvent(String userId, String registrationTaskId,
+      Calendar completed, String errorMessage) throws HpcException {
+    addDataTransferEvent(userId, HpcEventType.ARCHIVE_REQUEST_FAILED, null, null,
+        null, registrationTaskId, completed, null, null, errorMessage, null);
+  }
 
   @Override
   public void generateReportsEvents(List<String> userIds, HpcReportCriteria criteria)
@@ -537,20 +552,25 @@ public class HpcEventServiceImpl implements HpcEventService {
     StringBuilder registrationItemsStr = new StringBuilder();
     registrationItems.forEach(registrationItem -> {
       String source = null;
-      if (registrationItem.getRequest().getLinkSourcePath() != null) {
-        source = registrationItem.getRequest().getLinkSourcePath();
-      } else {
-        HpcFileLocation sourceLocation = null;
-        if (registrationItem.getRequest().getGlobusUploadSource() != null) {
-          sourceLocation =
-              registrationItem.getRequest().getGlobusUploadSource().getSourceLocation();
-        } else if (registrationItem.getRequest().getS3UploadSource() != null) {
-          sourceLocation = registrationItem.getRequest().getS3UploadSource().getSourceLocation();
-        } else {
-          sourceLocation =
-              registrationItem.getRequest().getGoogleDriveUploadSource().getSourceLocation();
-        }
-        source = toString(sourceLocation);
+      if (registrationItem.getRequest().getLinkSourcePath() != null || 
+    		  registrationItem.getRequest().getGlobusUploadSource() != null || 
+    		  registrationItem.getRequest().getS3UploadSource() != null || 
+    		  registrationItem.getRequest().getGoogleDriveUploadSource() != null) {
+	      if (registrationItem.getRequest().getLinkSourcePath() != null) {
+	        source = registrationItem.getRequest().getLinkSourcePath();
+	      } else {
+	        HpcFileLocation sourceLocation = null;
+	        if (registrationItem.getRequest().getGlobusUploadSource() != null) {
+	          sourceLocation =
+	              registrationItem.getRequest().getGlobusUploadSource().getSourceLocation();
+	        } else if (registrationItem.getRequest().getS3UploadSource() != null) {
+	          sourceLocation = registrationItem.getRequest().getS3UploadSource().getSourceLocation();
+	        } else {
+	          sourceLocation =
+	              registrationItem.getRequest().getGoogleDriveUploadSource().getSourceLocation();
+	        }
+	        source = toString(sourceLocation);
+	      }
       }
 
       registrationItemsStr.append("\n\t" + source + " -> " + registrationItem.getTask().getPath());

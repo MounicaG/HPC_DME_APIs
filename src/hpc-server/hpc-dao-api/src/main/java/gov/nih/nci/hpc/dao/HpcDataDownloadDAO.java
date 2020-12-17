@@ -88,6 +88,17 @@ public interface HpcDataDownloadDAO {
 	public List<HpcDataObjectDownloadTask> getDataObjectDownloadTasks() throws HpcException;
 
 	/**
+	 * Get all data object download task by data transfer status
+	 *
+	 * @param dataTransferStatus The data object download task data transfer status.
+	 * @return A data object download tasks.
+	 * @throws HpcException on database error.
+	 */
+	public List<HpcDataObjectDownloadTask> getDataObjectDownloadTaskByStatus(
+			HpcDataTransferDownloadStatus dataTransferStatus)
+			throws HpcException;
+
+	/**
 	 * Get next data object download task by data transfer status and data transfer
 	 * type.
 	 *

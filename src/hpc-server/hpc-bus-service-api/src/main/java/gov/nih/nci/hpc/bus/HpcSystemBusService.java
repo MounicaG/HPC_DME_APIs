@@ -227,6 +227,20 @@ public interface HpcSystemBusService {
    */
   public void refreshReportViews() throws HpcException;
 
+  /**
+   * Complete the archive request tasks.
+   *
+   * @throws HpcException on service failure.
+   */
+  public void completeArchiveTasks() throws HpcException;
+  
+  /**
+   * Complete the restore request tasks.
+   *
+   * @throws HpcException on service failure.
+   */
+  public void completeRestoreRequest() throws HpcException;
+  
   /** Close connection to Data Management system for the current service call. */
   public void closeConnection();
 }

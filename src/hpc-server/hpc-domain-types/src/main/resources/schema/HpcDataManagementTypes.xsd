@@ -186,6 +186,7 @@
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="RECEIVED" />
 			<xsd:enumeration value="ACTIVE" />
+			<xsd:enumeration value="ARCHIVE_REQUESTED" />
 		</xsd:restriction>
 	</xsd:simpleType>
 	

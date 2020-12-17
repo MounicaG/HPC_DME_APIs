@@ -31,6 +31,8 @@ import gov.nih.nci.hpc.domain.metadata.HpcMetadataQueryAttributeMatch;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataQueryLevelFilter;
 import gov.nih.nci.hpc.domain.metadata.HpcMetadataQueryOperator;
 import gov.nih.nci.hpc.domain.metadata.HpcNamedCompoundMetadataQuery;
+import gov.nih.nci.hpc.domain.model.HpcBulkArchiveItem;
+import gov.nih.nci.hpc.domain.model.HpcBulkArchiveRequest;
 import gov.nih.nci.hpc.domain.model.HpcUser;
 import gov.nih.nci.hpc.domain.notification.HpcNotificationSubscription;
 import gov.nih.nci.hpc.domain.user.HpcIntegratedSystemAccount;
@@ -135,6 +137,28 @@ public class HpcDomainValidator {
 		}
 		return true;
 	}
+	
+	/**
+	 * Validate a archive items.
+	 *
+	 * @param bulkArchiveTask the object to be validated.
+	 * @return true if valid, false otherwise.
+	 */
+	public static boolean isValidArchiveItems(HpcBulkArchiveRequest bulkArchiveRequest) {
+		if (bulkArchiveRequest.getItems() == null || bulkArchiveRequest.getItems().isEmpty()) {
+			logger.info("Empty archive items");
+			return false;
+		}
+		for (HpcBulkArchiveItem item : bulkArchiveRequest.getItems()) {
+			if (StringUtils.isEmpty(item.getConfigurationId())
+					|| StringUtils.isEmpty(item.getPath())) {
+				logger.info("Invalid archive item: {}", item.getPath());
+				return false;
+			}
+		}
+		return true;
+	}
+	
 
 	/**
 	 * Validate a S3 account.

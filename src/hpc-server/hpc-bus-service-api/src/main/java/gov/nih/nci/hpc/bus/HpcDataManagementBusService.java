@@ -12,6 +12,8 @@ package gov.nih.nci.hpc.bus;
 
 import java.io.File;
 
+import gov.nih.nci.hpc.dto.datamanagement.HpcArchiveResponseDTO;
+import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectArchiveRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectDownloadResponseDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkMoveRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkMoveResponseDTO;
@@ -470,4 +472,31 @@ public interface HpcDataManagementBusService {
 	 * @throws HpcException on service failure.
 	 */
 	public HpcBulkMoveResponseDTO movePaths(HpcBulkMoveRequestDTO bulkMoveRequest) throws HpcException;
+
+	/**
+	 * Archive a data object to Glacier
+	 * 
+	 * @param path		The data object path
+	 * @return A response DTO containing the taskId for the request
+	 * @throws HpcException on service failure.
+	 */
+	public HpcArchiveResponseDTO archiveDataObject(String path) throws HpcException;
+
+	/**
+	 * Archive a collection to Glacier
+	 * 
+	 * @param path		The collection path
+	 * @return A response DTO containing the taskId for the request
+	 * @throws HpcException on service failure.
+	 */
+	public HpcArchiveResponseDTO archiveCollection(String path) throws HpcException;
+
+	/**
+	 * Archive a list of data objects and/or collections to Glacier.
+	 * 
+	 * @param archiveRequest	The request to archive data objects and/or collections
+	 * @return A response DTO containing the taskId for the request
+	 * @throws HpcException on service failure.
+	 */
+	public HpcArchiveResponseDTO archiveDataObjectsOrCollections(HpcBulkDataObjectArchiveRequestDTO archiveRequest) throws HpcException;
 }

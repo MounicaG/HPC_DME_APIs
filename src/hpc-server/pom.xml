@@ -401,7 +401,7 @@
 			<url>https://raw.github.com/DICE-UNC/DICE-Maven/master/releases</url>
 			<releases>
 				<!--  TODO: enable after Jargon fix issue w/ recursive collection permission setting -->
-				<enabled>false</enabled>
+				<enabled>true</enabled>
 			</releases>
 			<snapshots>
 				<enabled>false</enabled>

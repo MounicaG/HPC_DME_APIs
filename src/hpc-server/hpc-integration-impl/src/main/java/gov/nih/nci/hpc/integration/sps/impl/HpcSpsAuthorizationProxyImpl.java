@@ -83,6 +83,7 @@ public class HpcSpsAuthorizationProxyImpl implements HpcSpsAuthorizationProxy {
 
 		WebClient client = null;
 		try {
+			logger.info("SMUSER: " + nciUserId + " SMSESSION: " + smSession);
 			String credential = username + ":" + password;
 			client = WebClient.create(url + resource, Collections.singletonList(new JAXBElementProvider()));
 

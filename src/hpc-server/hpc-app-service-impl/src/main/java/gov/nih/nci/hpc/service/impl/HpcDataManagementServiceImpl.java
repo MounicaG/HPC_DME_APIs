@@ -407,7 +407,7 @@ public class HpcDataManagementServiceImpl implements HpcDataManagementService {
 		getDataObjectLinks(sourcePath).forEach(link -> {
 			try {
 				metadataService.updateDataObjectSystemGeneratedMetadata(link.getAbsolutePath(), null, null, null, null,
-						null, null, null, null, destinationPath);
+						null, null, null, null, destinationPath, null);
 			} catch (HpcException e) {
 				logger.error("Failed to point link[{}] to {}", link.getAbsolutePath(), destinationPath);
 			}
@@ -696,6 +696,46 @@ public class HpcDataManagementServiceImpl implements HpcDataManagementService {
 		dataRegistrationDAO.upsertBulkDataObjectRegistrationTask(bulkDataObjectRegistrationTask);
 		return bulkDataObjectRegistrationTask.getId();
 	}
+	
+	@Override
+	public String archiveDataObjects(String userId, String uiURL,
+			List<String> paths) throws HpcException {
+		// Input validation
+		if (StringUtils.isEmpty(userId)) {
+			throw new HpcException("Null / Empty userId in registration list request",
+					HpcErrorType.INVALID_REQUEST_INPUT);
+		}
+
+		if (paths.isEmpty()) {
+			throw new HpcException("Empty archive paths", HpcErrorType.INVALID_REQUEST_INPUT);
+		}
+
+		// Create a bulk data object registration task for archival.
+		HpcBulkDataObjectRegistrationTask bulkDataObjectRegistrationTask = new HpcBulkDataObjectRegistrationTask();
+		bulkDataObjectRegistrationTask.setUserId(userId);
+		bulkDataObjectRegistrationTask
+				.setUiURL(!StringUtils.isEmpty(uiURL) ? uiURL : defaultBulkRegistrationStatusUiURL);
+		bulkDataObjectRegistrationTask.setCreated(Calendar.getInstance());
+		bulkDataObjectRegistrationTask.setStatus(HpcBulkDataObjectRegistrationTaskStatus.ARCHIVE_REQUESTED);
+
+		// Iterate through the individual data object paths and add them
+		// as items to the
+		// list registration task.
+		for (String path : paths) {
+
+			// Create a data object registration item.
+			HpcBulkDataObjectRegistrationItem registrationItem = new HpcBulkDataObjectRegistrationItem();
+			HpcDataObjectRegistrationTaskItem reqistrationTask = new HpcDataObjectRegistrationTaskItem();
+			reqistrationTask.setPath(path);
+			registrationItem.setTask(reqistrationTask);
+
+			bulkDataObjectRegistrationTask.getItems().add(registrationItem);
+		}
+
+		// Persist the registration request.
+		dataRegistrationDAO.upsertBulkDataObjectRegistrationTask(bulkDataObjectRegistrationTask);
+		return bulkDataObjectRegistrationTask.getId();
+	}
 
 	@Override
 	public List<HpcBulkDataObjectRegistrationTask> getBulkDataObjectRegistrationTasks(
@@ -756,6 +796,30 @@ public class HpcDataManagementServiceImpl implements HpcDataManagementService {
 							s3Account.setSecretKey("****");
 						}));
 
+		// Persist to DB.
+		dataRegistrationDAO.upsertBulkDataObjectRegistrationResult(registrationResult);
+	}
+	
+	public void completeArchiveRequestTask(HpcBulkDataObjectRegistrationTask registrationTask,
+			boolean result, String message, Calendar completed) throws HpcException {
+		// Input validation
+		if (registrationTask == null) {
+			throw new HpcException("Invalid data object list registration task", HpcErrorType.INVALID_REQUEST_INPUT);
+		}
+
+		// Cleanup the DB record.
+		dataRegistrationDAO.deleteBulkDataObjectRegistrationTask(registrationTask.getId());
+
+		// Create a registration result object.
+		HpcBulkDataObjectRegistrationResult registrationResult = new HpcBulkDataObjectRegistrationResult();
+		registrationResult.setId(registrationTask.getId());
+		registrationResult.setUserId(registrationTask.getUserId());
+		registrationResult.setResult(result);
+		registrationResult.setMessage(message);
+		registrationResult.setCreated(registrationTask.getCreated());
+		registrationResult.setCompleted(completed);
+		registrationResult.getItems().addAll(registrationTask.getItems());
+		
 		// Persist to DB.
 		dataRegistrationDAO.upsertBulkDataObjectRegistrationResult(registrationResult);
 	}

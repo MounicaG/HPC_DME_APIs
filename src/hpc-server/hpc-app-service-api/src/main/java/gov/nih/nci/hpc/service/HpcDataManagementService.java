@@ -375,6 +375,19 @@ public interface HpcDataManagementService {
   public void completeBulkDataObjectRegistrationTask(
       HpcBulkDataObjectRegistrationTask registrationTask, boolean result, String message,
       Calendar completed) throws HpcException;
+  
+  /**
+   * Complete a archive request task: 1. Update task info in DB with results info.
+   *
+   * @param registrationTask The registration task to complete.
+   * @param result The result of the task (true is successful, false is failed).
+   * @param message (Optional) If the task failed, a message describing the failure.
+   * @param completed (Optional) The download task completion timestamp.
+   * @throws HpcException on service failure.
+   */
+  public void completeArchiveRequestTask(
+      HpcBulkDataObjectRegistrationTask registrationTask, boolean result, String message,
+      Calendar completed) throws HpcException;
 
   /**
    * Get bulk data object registration task status.
@@ -494,4 +507,16 @@ public interface HpcDataManagementService {
    */
   public void addDataObjectRegistrationResult(String path,
       HpcDataObjectRegistrationResult dataObjectRegistrationResult, Long size) throws HpcException;
+
+  /**
+   * Add data objects archival task to the DB
+   * 
+   * @param userId
+   * @param uiURL
+   * @param paths
+   * @return
+   * @throws HpcException
+   */
+  public String archiveDataObjects(String userId, String uiURL,
+		List<String> paths) throws HpcException;
 }

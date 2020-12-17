@@ -101,7 +101,24 @@
 				type="hpc-domain-model:HpcDataObjectRegistrationRequest" />
 		</xsd:sequence>
 	</xsd:complexType>
+	
+	<xsd:complexType
+		name="HpcBulkArchiveItem">
+		<xsd:sequence>
+			<xsd:element name="path" type="xsd:string" />
+			<xsd:element name="configurationId" type="xsd:string" />
+		</xsd:sequence>
+	</xsd:complexType>
 
+	<xsd:complexType
+		name="HpcBulkArchiveRequest">
+		<xsd:sequence>
+			<xsd:element name="items"
+				type="hpc-domain-model:HpcBulkArchiveItem"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+	
 	<xsd:complexType
 		name="HpcBulkDataObjectRegistrationTask">
 		<xsd:sequence>

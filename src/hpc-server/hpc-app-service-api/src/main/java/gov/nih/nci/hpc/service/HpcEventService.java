@@ -170,6 +170,35 @@ public interface HpcEventService {
       throws HpcException;
 
   /**
+   * Add a archive request completed event.
+   *
+   * @param userId The user ID.
+   * @param registrationTaskId The data registration task ID.
+   * @param registrationItems The data registration items.
+   * @param completed The time the bulk registration task completed.
+   * @throws HpcException on service failure.
+   */
+  public void addArchiveRequestCompletedEvent(
+      String userId,
+      String registrationTaskId,
+      List<HpcBulkDataObjectRegistrationItem> registrationItems,
+      Calendar completed)
+      throws HpcException;
+
+  /**
+   * Add a archive request failed event.
+   *
+   * @param userId The user ID.
+   * @param registrationTaskId The data registration task ID.
+   * @param completed The time the data registration task failed.
+   * @param errorMessage the upload failed error message.
+   * @throws HpcException on service failure.
+   */
+  public void addArchiveRequestFailedEvent(
+      String userId, String registrationTaskId, Calendar completed, String errorMessage)
+      throws HpcException;
+
+  /**
    * Generate reports event.
    *
    * @param userIds The list of user ids to generate the events for.

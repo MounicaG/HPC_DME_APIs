@@ -195,6 +195,20 @@ public class HpcScheduledTasksImpl {
 	private void refreshReportViewsTask() {
 		executeTask("refreshReportViewsTask()", systemBusService::refreshReportViews);
 	}
+	
+	/** Complete archive request tasks. */
+	@Scheduled(cron = "${hpc.scheduler.cron.completeArchiveTasks.delay}")
+	private void completeArchiveTasksTask() {
+		executeTask("completeArchiveTasksTask()",
+				systemBusService::completeArchiveTasks);
+	}
+	
+	/** Complete restore request tasks. */
+	@Scheduled(cron = "${hpc.scheduler.cron.completeRestoreRequest.delay}")
+	private void completeRestoreRequestTask() {
+		executeTask("completeRestoreRequestTask()",
+				systemBusService::completeRestoreRequest);
+	}
 
 	// ---------------------------------------------------------------------//
 	// Helper Methods

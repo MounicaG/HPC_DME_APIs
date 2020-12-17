@@ -27,6 +27,7 @@ import javax.ws.rs.core.Response;
 import org.apache.cxf.jaxrs.ext.MessageContext;
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 
+import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectArchiveRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectDownloadRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkDataObjectRegistrationRequestDTO;
 import gov.nih.nci.hpc.dto.datamanagement.HpcBulkMoveRequestDTO;
@@ -330,6 +331,7 @@ public interface HpcDataManagementRestService {
 	@Produces("application/json; charset=UTF-8, application/xml; charset=UTF-8")
 	public Response registerDataObjects(
 			gov.nih.nci.hpc.dto.datamanagement.v2.HpcBulkDataObjectRegistrationRequestDTO bulkDataObjectRegistrationRequest);
+
 
 	/**
 	 * Get bulk data object registration task status.
@@ -666,4 +668,40 @@ public interface HpcDataManagementRestService {
 	@Consumes("application/json; charset=UTF-8, application/xml; charset=UTF-8")
 	@Produces("application/json; charset=UTF-8, application/xml; charset=UTF-8")
 	public Response movePaths(HpcBulkMoveRequestDTO bulkMoveRequest);
+	
+	/**
+	 * Data object archive to Glacier.
+	 *
+	 * @param path                   The data object path to archive.
+	 * @return The REST service response w/ HpcDataObjectArchiveResponseDTO entity.
+	 */
+	@POST
+	@Path("/dataObject/{path:.*}/archive")
+	@Produces("application/json; charset=UTF-8, application/xml; charset=UTF-8, application/octet-stream")
+	public Response archiveDataObject(@PathParam("path") String path);
+	
+	/**
+	 * Archive a collection to Glacier.
+	 *
+	 * @param path            The collection path.
+	 * @return The REST service response w/ HpcCollectionArchiveResponseDTO entity.
+	 */
+	@POST
+	@Path("/collection/{path:.*}/archive")
+	@Produces("application/json; charset=UTF-8, application/xml; charset=UTF-8")
+	public Response archiveCollection(@PathParam("path") String path);
+	
+	/**
+	 * Archive a list of data objects or a list of collections to Glacier.
+	 *
+	 * @param archiveRequest The archive request.
+	 * @return The REST service response w/ HpcBulkDataObjectArchiveResponseDTO
+	 *         entity.
+	 */
+	@POST
+	@Path("/archive")
+	@Consumes("application/json; charset=UTF-8, application/xml; charset=UTF-8")
+	@Produces("application/json; charset=UTF-8, application/xml; charset=UTF-8")
+	public Response archiveDataObjectsOrCollections(HpcBulkDataObjectArchiveRequestDTO downloadRequest);
+
 }
